@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -6,36 +6,33 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
+import {setPile} from '../redux/pileSlice';
+import {useDispatch} from 'react-redux';
 
 const SettingsScreen: React.FC = () => {
+  const [pileValue, setPileValue] = useState(0);
+
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Setting 1:</Text>
+        <Text style={styles.inputLabel}>
+          {' '}
+          Set total matches by formula (2n + 1):
+        </Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
-          placeholder="Enter something"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Setting 2:</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          placeholder="Enter something"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>setting 3:</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          placeholder="Enter something"
+          placeholder="Enter n"
+          onChangeText={text => setPileValue(Number(text))}
         />
       </View>
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Save Settings</Text>
+        <Text
+          style={styles.buttonText}
+          onPress={() => dispatch(setPile(pileValue))}>
+          Save Settings
+        </Text>
       </TouchableOpacity>
     </View>
   );
