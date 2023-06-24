@@ -1,12 +1,10 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import type {RootState} from '../redux/store';
-import {addComputerMatches} from '../redux/computerMatchesSlice';
 
 const GameCard: React.FC = () => {
   const matchesNumber = useSelector((state: RootState) => state.pile.value);
-  const dispatch = useDispatch();
 
   const renderedTexts = Array.from(Array(matchesNumber), (_, index) => (
     <Text style={styles.matchIcon} key={index}>
