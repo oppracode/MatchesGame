@@ -1,10 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import PlayerCard from '../components/PlayerCard';
+import ComputerCard from '../components/ComputerCard';
+import GameCard from '../components/GameCard';
 
 function GameScreen(): JSX.Element {
   return (
     <View style={styles.container}>
-      <Text style={styles.sampleText}>Matches Game</Text>
+      <ComputerCard />
+      <GameCard />
+      <PlayerCard />
     </View>
   );
 }
@@ -15,7 +20,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   sampleText: {
-    fontSize: 100,
+    fontSize: 16,
   },
 });
 
