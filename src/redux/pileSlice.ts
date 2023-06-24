@@ -1,13 +1,19 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+export interface PileState {
+  value: number;
+}
+
+const initialState: PileState = {
+  value: 25,
+};
+
 const pileSlice = createSlice({
   name: 'pile',
-  initialState: {
-    pile: 25,
-  },
+  initialState,
   reducers: {
     setPile(state, action: PayloadAction<number>) {
-      state.pile = action.payload;
+      state.value = action.payload;
     },
   },
 });
