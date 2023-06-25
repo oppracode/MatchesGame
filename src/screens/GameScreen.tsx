@@ -19,9 +19,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#333',
   },
-  sampleText: {
-    fontSize: 16,
-  },
 });
 
 export default GameScreen;

@@ -3,8 +3,8 @@ import pileReducer from './pileSlice';
 import playerMatchesReducer from './playerMatchesSlice';
 import computerMatchesSlice from './computerMatchesSlice';
 import currentPlayerSlice from './currentPlayerSlice';
-import gameOverSlice from './gameOverSlice';
 import matchesTurnSlice from './matchesTurnSlice';
+import gameShapeSlice from './gameShapeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +12,7 @@ export const store = configureStore({
     playerMatches: playerMatchesReducer,
     computerMatches: computerMatchesSlice,
     currentPlayer: currentPlayerSlice,
-    gameOver: gameOverSlice,
+    gameShape: gameShapeSlice,
     matchesTurn: matchesTurnSlice,
   },
 });

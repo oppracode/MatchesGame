@@ -2,10 +2,14 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import type {RootState} from '../redux/store';
 import {useSelector} from 'react-redux';
+import CurrentPlayerIcon from '../icons/CurrentPlayerIcon';
 
 const ComputerCard: React.FC = () => {
   const computerMatches = useSelector(
     (state: RootState) => state.computerMatches.value,
+  );
+  const currentPlayer = useSelector(
+    (state: RootState) => state.currentPlayer.player,
   );
 
   return (
@@ -15,6 +19,7 @@ const ComputerCard: React.FC = () => {
         <Text style={styles.playerText}>Computer</Text>
         <Text style={styles.scoreText}>Matches: {computerMatches}</Text>
       </View>
+      {currentPlayer === 'computer' ? <CurrentPlayerIcon /> : null}
     </View>
   );
 };

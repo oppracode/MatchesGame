@@ -5,9 +5,10 @@ import type {RootState} from '../redux/store';
 import {removePileMatches} from '../redux/pileSlice';
 import {setCurrentPlayer} from '../redux/currentPlayerSlice';
 import {addComputerMatches} from '../redux/computerMatchesSlice';
-import {setGameOver} from '../redux/gameOverSlice';
+import {setGameOver} from '../redux/gameShapeSlice';
 import MatchButtons from './MatchButtons';
 import GameOver from './GameOver';
+import StartButton from './StartButton';
 
 const GameCard: React.FC = () => {
   const pileMatches = useSelector((state: RootState) => state.pile.value);
@@ -17,10 +18,11 @@ const GameCard: React.FC = () => {
   const computerMatches = useSelector(
     (state: RootState) => state.computerMatches.value,
   );
-  const gameOver = useSelector((state: RootState) => state.gameOver.value);
+  const gameOver = useSelector((state: RootState) => state.gameShape.over);
   const maxMatchesPerTurn = useSelector(
     (state: RootState) => state.matchesTurn.value,
   );
+  const gameStart = useSelector((state: RootState) => state.gameShape.started);
   const dispatch = useDispatch();
 
   const renderedTexts = Array.from(Array(pileMatches), (_, index) => (
@@ -30,43 +32,46 @@ const GameCard: React.FC = () => {
   ));
 
   useEffect(() => {
-    if (pileMatches === 0) {
+    if (pileMatches === 0 && gameStart) {
       dispatch(setGameOver(true));
-    } else if (currentPlayer === 'computer') {
-      let computerMove;
-      if (computerMatches % (maxMatchesPerTurn + 1) === 0) {
-        // Force player into a losing position
-        const maxMatches = Math.min(maxMatchesPerTurn, pileMatches);
-        const remainingMatches = pileMatches - maxMatches;
+    } else {
+      if (currentPlayer === 'computer' && gameStart) {
+        let computerMove;
+        if (computerMatches % (maxMatchesPerTurn + 1) === 0) {
+          // Force player into a losing position
+          const maxMatches = Math.min(maxMatchesPerTurn, pileMatches);
+          const remainingMatches = pileMatches - maxMatches;
 
-        if (remainingMatches % 2 === 1) {
-          // If the remaining matches after the player's move is odd,
-          // the computer takes 1 match to make it even
-          computerMove = 1;
+          if (remainingMatches % 2 === 1) {
+            // If the remaining matches after the player's move is odd,
+            // the computer takes 1 match to make it even
+            computerMove = 1;
+          } else {
+            // Otherwise, the computer takes the maximum number of matches allowed
+            computerMove = maxMatches;
+          }
         } else {
-          // Otherwise, the computer takes the maximum number of matches allowed
-          computerMove = maxMatches;
-        }
-      } else {
-        // Random computer move
-        const maxMatches = Math.min(maxMatchesPerTurn, pileMatches);
-        const remainingMatches = pileMatches - maxMatches;
+          // Random computer move
+          const maxMatches = Math.min(maxMatchesPerTurn, pileMatches);
+          const remainingMatches = pileMatches - maxMatches;
 
-        if (remainingMatches % 2 === 1) {
-          // If the remaining matches after the player's move is odd,
-          // the computer takes a random odd number of matches to make it even
-          const oddMoves = [...Array(maxMatches + 1).keys()].filter(
-            move => move % 2 === 1 && move <= remainingMatches,
-          );
-          computerMove = oddMoves[Math.floor(Math.random() * oddMoves.length)];
-        } else {
-          // Otherwise, the computer takes the maximum number of matches allowed
-          computerMove = maxMatches;
+          if (remainingMatches % 2 === 1) {
+            // If the remaining matches after the player's move is odd,
+            // the computer takes a random odd number of matches to make it even
+            const oddMoves = [...Array(maxMatches + 1).keys()].filter(
+              move => move % 2 === 1 && move <= remainingMatches,
+            );
+            computerMove =
+              oddMoves[Math.floor(Math.random() * oddMoves.length)];
+          } else {
+            // Otherwise, the computer takes the maximum number of matches allowed
+            computerMove = maxMatches;
+          }
         }
+        dispatch(removePileMatches(computerMove));
+        dispatch(addComputerMatches(computerMove));
+        dispatch(setCurrentPlayer('human'));
       }
-      dispatch(removePileMatches(computerMove));
-      dispatch(addComputerMatches(computerMove));
-      dispatch(setCurrentPlayer('human'));
     }
   }, [
     computerMatches,
@@ -74,6 +79,7 @@ const GameCard: React.FC = () => {
     currentPlayer,
     dispatch,
     maxMatchesPerTurn,
+    gameStart,
   ]);
 
   return (
@@ -81,7 +87,8 @@ const GameCard: React.FC = () => {
       <View style={styles.matchesContainer}>{renderedTexts}</View>
       {gameOver ? <GameOver /> : null}
       <Text>Matches in this pile: {pileMatches}</Text>
-      <MatchButtons />
+
+      {gameStart ? <MatchButtons /> : <StartButton />}
     </View>
   );
 };
@@ -104,10 +111,6 @@ const styles = StyleSheet.create({
   },
   matchIcon: {
     fontSize: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 16,
   },
 });
 
