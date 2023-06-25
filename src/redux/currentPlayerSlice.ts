@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-export interface PlayerMatchesState {
+export interface CurrentPlayerState {
   player: string;
 }
 
-const initialState: PlayerMatchesState = {
+const initialState: CurrentPlayerState = {
   player: 'human',
 };
 
