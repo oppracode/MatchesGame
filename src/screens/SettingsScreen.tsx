@@ -6,18 +6,43 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
-import {setPile} from '../redux/pileSlice';
+import {resetPile, setPile} from '../redux/pileSlice';
 import {useDispatch} from 'react-redux';
+import {resetComputerMatches} from '../redux/computerMatchesSlice';
+import {
+  resetCurrentPlayer,
+  setCurrentPlayer,
+} from '../redux/currentPlayerSlice';
+import {resetPlayerMatches} from '../redux/playerMatchesSlice';
+import {resetGameOver} from '../redux/gameOverSlice';
+import {resetMatchesTurn, setMatchesTurn} from '../redux/matchesTurnSlice';
 
-const SettingsScreen: React.FC = () => {
-  const [pileValue, setPileValue] = useState(0);
+function SettingsScreen(): JSX.Element {
+  const [pileValue, setPileValue] = useState(25);
+  const [firstPlayer, setFirstPlayer] = useState('human');
+  const [matchesEachTurn, setMatchesEachTurn] = useState(3);
 
   const dispatch = useDispatch();
+
+  function handleResetButtonPress() {
+    dispatch(resetComputerMatches());
+    dispatch(resetCurrentPlayer());
+    dispatch(resetPile());
+    dispatch(resetPlayerMatches());
+    dispatch(resetGameOver());
+    dispatch(resetMatchesTurn());
+  }
+
+  function handleSaveButtonPress() {
+    dispatch(setPile(pileValue));
+    dispatch(setCurrentPlayer(firstPlayer));
+    dispatch(setMatchesTurn(matchesEachTurn));
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>
-          {' '}
           Set total matches by formula (2n + 1):
         </Text>
         <TextInput
@@ -26,17 +51,39 @@ const SettingsScreen: React.FC = () => {
           placeholder="Enter n"
           onChangeText={text => setPileValue(Number(text))}
         />
-      </View>
-      <TouchableOpacity style={styles.button}>
-        <Text
-          style={styles.buttonText}
-          onPress={() => dispatch(setPile(pileValue))}>
-          Save Settings
+        <Text style={styles.inputLabel}>
+          Number of matches allowed to take(1 to m):
         </Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          placeholder="Enter m"
+          onChangeText={text => setMatchesEachTurn(Number(text))}
+        />
+      </View>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          firstPlayer === 'computer' && styles.selectedButton,
+        ]}
+        onPress={() =>
+          setFirstPlayer(firstPlayer === 'computer' ? 'human' : 'computer')
+        }>
+        <Text style={styles.buttonText}>Computer moves first</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleSaveButtonPress()}>
+        <Text style={styles.buttonText}>Save Settings</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleResetButtonPress()}>
+        <Text style={styles.buttonText}>Reset</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -57,6 +104,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 16,
     marginBottom: 8,
+    paddingTop: 18,
   },
   input: {
     height: 40,
@@ -71,6 +119,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     marginTop: 16,
+  },
+  selectedButton: {
+    backgroundColor: 'green',
   },
   buttonText: {
     color: 'white',

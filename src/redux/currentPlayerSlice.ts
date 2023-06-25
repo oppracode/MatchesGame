@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface PlayerMatchesState {
-  player: 'human' | 'computer';
+  player: string;
 }
 
 const initialState: PlayerMatchesState = {
@@ -12,7 +12,7 @@ const currentPlayerSlice = createSlice({
   name: 'currentPlayer',
   initialState,
   reducers: {
-    setCurrentPlayer: (state, action: PayloadAction<'human' | 'computer'>) => {
+    setCurrentPlayer: (state, action: PayloadAction<string>) => {
       state.player = action.payload;
     },
     resetCurrentPlayer: state => {
