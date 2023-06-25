@@ -5,7 +5,7 @@ export interface ComputerMatchesState {
 }
 
 const initialState: ComputerMatchesState = {
-  value: 15,
+  value: 0,
 };
 
 const computerMatchesSlice = createSlice({
@@ -15,8 +15,12 @@ const computerMatchesSlice = createSlice({
     addComputerMatches: (state, action: PayloadAction<number>) => {
       state.value += action.payload;
     },
+    resetComputerMatches: state => {
+      state.value = initialState.value;
+    },
   },
 });
 
-export const {addComputerMatches} = computerMatchesSlice.actions;
+export const {addComputerMatches, resetComputerMatches} =
+  computerMatchesSlice.actions;
 export default computerMatchesSlice.reducer;

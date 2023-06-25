@@ -15,8 +15,14 @@ const pileSlice = createSlice({
     setPile(state, action: PayloadAction<number>) {
       state.value = action.payload;
     },
+    removePileMatches(state, action: PayloadAction<number>) {
+      state.value -= action.payload;
+    },
+    resetPile(state) {
+      state.value = initialState.value;
+    },
   },
 });
 
-export const {setPile} = pileSlice.actions;
+export const {setPile, removePileMatches, resetPile} = pileSlice.actions;
 export default pileSlice.reducer;

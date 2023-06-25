@@ -15,8 +15,12 @@ const playerMatchesSlice = createSlice({
     addPlayerMatches: (state, action: PayloadAction<number>) => {
       state.value += action.payload;
     },
+    resetPlayerMatches: state => {
+      state.value = initialState.value;
+    },
   },
 });
 
-export const {addPlayerMatches} = playerMatchesSlice.actions;
+export const {addPlayerMatches, resetPlayerMatches} =
+  playerMatchesSlice.actions;
 export default playerMatchesSlice.reducer;
